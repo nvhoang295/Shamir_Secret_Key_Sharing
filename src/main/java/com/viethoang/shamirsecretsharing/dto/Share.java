@@ -2,20 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.viethoang.shamirsecretsharing;
+package com.viethoang.shamirsecretsharing.dto;
+
+import java.math.BigInteger;
+import lombok.Builder;
 
 /**
  *
- * @author vieth
+ * @author Lenovo
  */
-
-
-public record Pair<L, R> (
-        L x,
-        R fx
+@Builder
+public record Share(
+        BigInteger x,
+        BigInteger y
 ) {
-    public Pair(L x, R fx) {
-        this.x = x;
-        this.fx = fx;
-    }
+    
 }
