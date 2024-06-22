@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.viethoang.shamirsecretsharing;
+package com.viethoang.shamirsecretsharing.test;
 
 import com.viethoang.shamirsecretsharing.dto.Share;
 import java.math.BigInteger;

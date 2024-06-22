@@ -1,11 +1,12 @@
-H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\ShamirSecretSharing.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\controller\MainController.java
+H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\test\ShamirSecretSharing.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\util\FormatUtil.java
-H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\MultiThreadedSum.java
-H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\PrimeFinder.java
+H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\test\MultiThreadedSum.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\service\MainService.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\util\MathUtil.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\dto\Share.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\service\MainServiceImpl.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\view\MainView.java
+H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\test\PrimeFinder.java
+H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\test\SumArray.java
 H:\Workspace\6_Side_Projects\ShamirSecretSharing\src\main\java\com\viethoang\shamirsecretsharing\ShamirSecretSharingApplication.java

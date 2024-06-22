@@ -5,6 +5,7 @@
 package com.viethoang.shamirsecretsharing.service;
 
 import com.viethoang.shamirsecretsharing.dto.Share;
+import com.viethoang.shamirsecretsharing.util.MathUtil;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class MainServiceImpl implements MainService {
     ) {
         BigInteger[] coefficients = new BigInteger[threshold];
         coefficients[0] = secret;
-        for (int j = 1; j <= threshold - 1; j++) 
+        for (int j = 1; j <= threshold - 1; j++)
             coefficients[j] = new BigInteger(prime.bitLength(), random).mod(prime);
         
         return coefficients;
@@ -54,9 +55,13 @@ public class MainServiceImpl implements MainService {
             BigInteger prime, 
             BigInteger[] coefficients
     ) {
-        BigInteger result = BigInteger.ZERO;
-        for (int i = coefficients.length - 1; i >= 0; i--)
-            result = result.multiply(x).add(coefficients[i]).mod(prime);
+        BigInteger result = coefficients[0];
+        for (int j = 1; j <= coefficients.length - 1; ++j) 
+            result = result.add(
+                    coefficients[j].multiply(
+                            MathUtil.modPow(x, BigInteger.valueOf(j), prime) //x.modPow(BigInteger.valueOf(j), prime)
+                    )
+            );
         
         return result;
     }
@@ -65,7 +70,7 @@ public class MainServiceImpl implements MainService {
     @Override
     public BigInteger reconstructSecret(
             List<Share> shares, 
-            BigInteger prime, 
+            BigInteger prime,  
             int threshold
     ) {
         BigInteger secret = BigInteger.ZERO;
@@ -83,8 +88,8 @@ public class MainServiceImpl implements MainService {
                 denominator = denominator.multiply(x_j.subtract(x_i)).mod(prime);
             }
             BigInteger term = y_j.multiply(numerator)
-                    .multiply(denominator.modInverse(prime))
-                    .mod(prime);
+                                .multiply(denominator.modInverse(prime))
+                                .mod(prime);
             secret = secret.add(term).mod(prime);
         }
         return secret;

@@ -26,13 +26,14 @@ import javax.swing.table.DefaultTableModel;
  * @author Lenovo
  */
 public class MainView extends javax.swing.JFrame {
-    
+
     private final Font tableHeaderFont = new Font("Segoe UI", Font.BOLD, 14);
-    
+
     private final Random random = new SecureRandom();
     private final MainService service = new MainServiceImpl(random);
     private final MainController controller = new MainController(service);
-    
+    private final MathUtil mathUtil = new MathUtil(random);
+
     private BigInteger prime;
     private int numShares;
     private int threshold;
@@ -49,7 +50,7 @@ public class MainView extends javax.swing.JFrame {
         leftTable.getTableHeader().setFont(tableHeaderFont);
         rightTable.getTableHeader().setFont(tableHeaderFont);
     }
-    
+
     private void showMessageDiaglog(String message) {
         messageDiaglog.setVisible(true);
         messageLabel.setText(message);
@@ -183,6 +184,7 @@ public class MainView extends javax.swing.JFrame {
 
             }
         ));
+        leftTable.setRowSelectionAllowed(false);
         jScrollPane4.setViewportView(leftTable);
 
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
@@ -323,6 +325,21 @@ public class MainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void shareKeyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareKeyButtonActionPerformed
+        if (secretTextField.getText().isBlank()) {
+            showMessageDiaglog("Khoá cần chia sẻ không được để trống.");
+            return;
+        }
+        
+        if (numSharesTextField.getText().isBlank()) {
+            showMessageDiaglog("Số thành viên giữ khoá không được để trống.");
+            return;
+        }
+        
+        if (thresholdTextField.getText().isBlank()) {
+            showMessageDiaglog("Số thành viên tối thiểu không được để trống.");
+            return;
+        }
+        
         BigInteger secret = new BigInteger(secretTextField.getText());
         
         numShares = Integer.parseInt(numSharesTextField.getText());
@@ -332,75 +349,77 @@ public class MainView extends javax.swing.JFrame {
             showMessageDiaglog("Số thành viên giữ khoá phải nhỏ hơn số nguyên tố p");
             return;
         }
-        
+
         if (threshold > numShares) {
             showMessageDiaglog("Số thành viên tối thiểu để mở khoá vượt quá số thành viên giữ khoá");
             return;
         }
-        
-        
-        
+
         shares = controller.splitSecret(secret, prime, numShares, threshold);
-        
+
         loadDataToBothTable(shares);
     }//GEN-LAST:event_shareKeyButtonActionPerformed
-    
+
     private void loadDataToBothTable(List<Share> items) {
-        String[] tableHeader = {
-            "xi",
-            "Pi"
-        };
-        
+        String[] tableHeader = {"xi", "yi"};
+
         DefaultTableModel tableModel = new DefaultTableModel(null, tableHeader) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        
+
         items.forEach(share -> {
-            tableModel.addRow(
-                    new Object[] {
-                        share.x(),
-                        share.y()
-                    }
-            );
+            tableModel.addRow(new Object[]{
+                share.x(),
+                share.y()
+            });
         });
-        
+
         leftTable.setModel(tableModel);
         rightTable.setModel(tableModel);
     }
-    
+
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         secretTextField.setText("");
         numSharesTextField.setText("");
         thresholdTextField.setText("");
         primeTextField.setText("");
+        reconstructedSecretTextField.setText("");
         loadDataToBothTable(new ArrayList<>());
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void restoreKeyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreKeyButtonActionPerformed
+        if (shares == null || shares.isEmpty()) {
+            showMessageDiaglog("Danh sách hiện đang trống, vui lòng tạo các mảnh khoá trước.");
+            return;
+        }
+        
         int[] selectedRows = rightTable.getSelectedRows();
         int selectedRowLen = selectedRows.length;
         if (selectedRows.length < threshold) {
             showMessageDiaglog(String.format("Cần ít nhất %d mảnh để khôi phục khoá.", threshold));
             return;
         }
-        
+
         List<Share> selectedShares = new ArrayList<>();
-        for (int i = 0; i < selectedRowLen; ++i) selectedShares.add(shares.get(i));
-        
+        for (int i = 0; i < selectedRowLen; ++i) {
+            selectedShares.add(shares.get(i));
+        }
+
         BigInteger reconstructedSecret = controller.reconstructSecret(selectedShares, prime, threshold);
         reconstructedSecretTextField.setText(reconstructedSecret.toString());
     }//GEN-LAST:event_restoreKeyButtonActionPerformed
 
     private void secretTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_secretTextFieldKeyReleased
         String input = secretTextField.getText();
-        
-        if (!FormatUtil.isInteger(input)) return;
-        
-        
-        prime = MathUtil.findNextPrime(new BigInteger(input));
+
+        if (!FormatUtil.isInteger(input)) {
+            return;
+        }
+
+        prime = mathUtil.findNextPrime(new BigInteger(input));
         primeTextField.setText(prime.toString());
     }//GEN-LAST:event_secretTextFieldKeyReleased
 
@@ -415,7 +434,7 @@ public class MainView extends javax.swing.JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             java.awt.EventQueue.invokeLater(() -> {
-            new MainView().setVisible(true);
+                new MainView().setVisible(true);
             });
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
