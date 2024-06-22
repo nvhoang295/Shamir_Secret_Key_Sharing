@@ -5,6 +5,8 @@
 package com.viethoang.shamirsecretsharing.util;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 
@@ -82,26 +84,119 @@ public class MathUtil {
         return (int) (Math.random() * (end - begin) + begin);
     }
         
-    public static BigInteger modPow(BigInteger x, BigInteger n, BigInteger m) {
+    public static BigInteger modPow(
+            BigInteger x,
+            BigInteger n,
+            BigInteger m
+    ) {
         BigInteger result = BigInteger.ONE;
-        BigInteger base = x.mod(m); // lấy x modulo m ban đầu
+        BigInteger base = x.mod(m);
 
         while (n.compareTo(BigInteger.ZERO) > 0) {
-            // nếu bit cuối cùng của n là 1
             if (n.testBit(0)) {
-                result = result.multiply(base).mod(m); // result = (result * base) % m
+                result = result.multiply(base).mod(m);
             }
-            base = base.multiply(base).mod(m); // base = (base * base) % m
-            n = n.shiftRight(1); // dịch phải n (tương đương n = n / 2)
+            base = base.multiply(base).mod(m);
+            n = n.shiftRight(1);
         }
         
         return result;
     }
     
+//    public static BigInteger modInverse(
+//            BigInteger r0,
+//            BigInteger r1
+//    ) {
+//        BigInteger[] q = new BigInteger[1000];
+//        BigInteger[] s = new BigInteger[1000];
+//        BigInteger[] t = new BigInteger[1000];
+//
+//        BigInteger m = r0;
+//
+//        BigInteger r2 = BigInteger.valueOf(-1);
+//        BigInteger i = BigInteger.ZERO;
+//        int intValue;
+//        while (r2.compareTo(BigInteger.ZERO) != 0) {
+//            intValue = i.intValue();
+//
+//            q[intValue] = r0.divide(r1);
+//            r2 = r0.mod(r1);
+//
+//            switch (intValue) {
+//                case 0 -> {
+//                    s[intValue] = BigInteger.ONE;
+//                    t[intValue] = BigInteger.ZERO;
+//                    break;
+//                }
+//                case 1 -> {
+//                    s[intValue] = BigInteger.ZERO;
+//                    t[intValue] = BigInteger.ONE;
+//                    break;
+//                }
+//                case 2 -> {
+//                    s[intValue] = (s[intValue - 2].subtract(q[intValue - 1])).multiply(s[intValue - 1]);
+//                    t[intValue] = (t[intValue - 2].subtract(q[intValue - 1])).multiply(t[intValue - 1]);
+//                    break;
+//                }
+//            }
+//
+//            r0 = r1;
+//            r1 = r2;
+//            i = i.add(BigInteger.ONE);
+//        }
+//        intValue = i.intValue();
+//        s[intValue] = (s[intValue - 2].subtract(q[intValue - 1])).multiply(s[intValue - 1]);
+//        t[intValue] = (t[intValue - 2].subtract(q[intValue - 1])).multiply(t[intValue - 1]);
+//
+//        return t[intValue].compareTo(BigInteger.ZERO) < 0
+//                ? t[intValue].add(m)
+//                : t[intValue];
+//    }
+
+    public static BigInteger modInverse(BigInteger r0, BigInteger r1) {
+        BigInteger m = r0;
+        BigInteger[] q = new BigInteger[10000];
+        BigInteger[] s = new BigInteger[10000];
+        BigInteger[] t = new BigInteger[10000];
+
+        int i = 0;
+        BigInteger r2 = BigInteger.valueOf(-1);
+        while (!r2.equals(BigInteger.ZERO)) {
+            q[i + 1] = r0.divide(r1);
+            r2 = r0.mod(r1);
+
+            switch (i) {
+                case 0 -> {
+                    s[i] = BigInteger.ONE;
+                    t[i] = BigInteger.ZERO;
+                }
+                case 1 -> {
+                    s[i] = BigInteger.ZERO;
+                    t[i] = BigInteger.ONE;
+                }
+                default -> {
+                    s[i] = s[i - 2].subtract(q[i].multiply(s[i - 1]));
+                    t[i] = t[i - 2].subtract(q[i].multiply(t[i - 1]));
+                }
+            }
+
+            r0 = r1;
+            r1 = r2;
+            ++i;
+        }
+        s[i] = s[i - 2].subtract(q[i].multiply(s[i - 1]));
+        t[i] = t[i - 2].subtract(q[i].multiply(t[i - 1]));
+
+        BigInteger result = t[i].compareTo(BigInteger.ZERO) < 0 ? t[i].add(m) : t[i];
+
+        return result;
+    }
+    
     public static void main(String[] args) {
 //        System.out.println(new BigInteger("1".repeat(4), 2));
+System.out.println(modInverse(BigInteger.valueOf(29), BigInteger.valueOf(8)));
         for (int i = 0; i <= 10; ++i) {
-            System.out.println(modPow(BigInteger.valueOf(2), BigInteger.valueOf(i), BigInteger.valueOf(9)));
+//            System.out.println(modPow(BigInteger.valueOf(2), BigInteger.valueOf(i), BigInteger.valueOf(9)));
         }
     }
     

@@ -88,7 +88,7 @@ public class MainServiceImpl implements MainService {
                 denominator = denominator.multiply(x_j.subtract(x_i)).mod(prime);
             }
             BigInteger term = y_j.multiply(numerator)
-                                .multiply(denominator.modInverse(prime))
+                                .multiply(MathUtil.modInverse(prime, denominator) )
                                 .mod(prime);
             secret = secret.add(term).mod(prime);
         }
